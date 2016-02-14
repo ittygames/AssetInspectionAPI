@@ -1,0 +1,15 @@
+//Dependencies
+
+
+var express = require('express');
+var router = express.Router();
+
+
+//Models
+var Inspector = require('./../model/inspector');
+
+//routes
+Inspector.methods(['get', 'put', 'post', 'delete']);
+Inspector.register('Inspector', '/inspector');
+//return router
+module.exports = router;

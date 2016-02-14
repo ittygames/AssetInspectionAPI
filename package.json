@@ -1,0 +1,26 @@
+{
+  "name": "assetinspectiontrackingapi",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "Carl",
+  "contributors": [],
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.3",
+    "node-restful": "^0.2.5"
+  },
+  "description": "Rest API for Asset Inspection Tracking Tool",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC"
+}
