@@ -1,17 +1,20 @@
+/**
+ * Created by Carl on 14/02/2016.
+ */
 
 //Dependencies
 var restful = require('node-restful'),
     mongoose = restful.mongoose;
 
 //Schema
-var inspectorSchema = new mongoose.Schema({
-    name: String,
-    employeeID: Number
+var assetTypeSchema = new mongoose.Schema({
+    name: {type: String, index: {unique: true}},
+    inspectionFrequency: Number
 });
 
 
 //Return Model
-var returnModel = restful.model('inspector', inspectorSchema);
+var returnModel = restful.model('assetType', assetTypeSchema);
 returnModel.methods(['get', 'put', 'post', 'delete']);
 
 
