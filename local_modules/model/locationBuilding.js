@@ -6,7 +6,8 @@
 var restful = require('node-restful'),
     locationSite = require('./locationSite'),
     mongoose = restful.mongoose,
-    common = require('../common');
+    common = require('../common'),
+    rsvp = require('rsvp');
 
 //Schema
 var locationBuildingSchema = new mongoose.Schema({
@@ -26,8 +27,15 @@ var setPopulation = function (req, res, next) {
 
 
 var doValidation = function (req, res, next) {
-    common.validateChild(req, res, next, req.body.site, locationSite);
-
+    rsvp.all([
+        common.validateChild(req, res, next, req.body.site, locationSite)
+    ]).then(function (comments) {
+        next();
+    }).catch(function (error) {
+        var msg = error();
+        console.log(msg);
+        next({ status: 404, err: msg});
+    });
 };
 
 

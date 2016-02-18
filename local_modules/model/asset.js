@@ -5,8 +5,10 @@
 //Dependencies
 var restful = require('node-restful'),
     assetType = require('./assetType'),
+    inspector = require('./inspector'),
     mongoose = restful.mongoose,
-    common = require('../common');
+    common = require('../common'),
+    rsvp = require('rsvp');
 
 
 //Schema
@@ -15,19 +17,33 @@ var assetSchema = new mongoose.Schema({
     type: {
         type: 'ObjectId',
         ref: 'assetType'
+    },
+    primaryInspector : {
+        type: 'ObjectId',
+        ref: 'inspector'
     }
+
 });
 
 
 // population / validation handlers
 var setPopulation = function (req, res, next) {
-    req.query = {populate: ['type']};
+    req.query = {populate: ['type','primaryInspector']};
     next();
 };
 
 var doValidation = function (req, res, next) {
-    common.validateChild(req, res, next, req.body.type, assetType);
-    //next(); // Required, so error later
+    rsvp.all([
+        common.validateChild(req.body.type, assetType),
+        common.validateChild(req.body.primaryInspector, inspector)
+    ]).then(function (comments) {
+        next();
+    }).catch(function (error) {
+        var msg = error();
+        console.log(msg);
+        next({ status: 404, err: msg});
+    });
+
 };
 
 

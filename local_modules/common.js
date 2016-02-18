@@ -1,23 +1,27 @@
 //Modules
 var restful = require('node-restful'),
-    mongoose = restful.mongoose;
+    mongoose = restful.mongoose,
+    rsvp = require('rsvp');
 
-var validateSingularChild = function (req, res, next, valuePath, model) {
-    if (valuePath) {
-        model.findById(valuePath, function (err, model) {
-            if (!model) {
-                return next(restful.objectNotFound());
-            }
-            next();
-        });
-    } else {
-        next();
-    }
+var validateSingularChild = function (valuePath, model) {
+    return new rsvp.Promise(function(resolve, reject) {
+        if (valuePath) {
+            model.findById(valuePath, function (err, modelreturn) {
+                if(!modelreturn) {
+                    reject(function(){return "Failed to find child with id of " +  valuePath;});
+                }else{
+                    resolve();
+                }
+            });
+        } else {
+            resolve();
+        }
+    });
 };
 
-var validateArrayChild = function (req, res, next, arrayValues, model) {
+var validateArrayChild = function (arrayValues, model) {
     arrayValues.forEach(function (entry) {
-        validateSingularChild(req, res, next, entry, model);
+        validateSingularChild(entry, model);
     });
 };
 

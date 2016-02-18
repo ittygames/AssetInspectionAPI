@@ -8,7 +8,8 @@ var restful = require('node-restful'),
     asset = require('./asset'),
     inspectionOutcome = require('./inspectionOutcome'),
     mongoose = restful.mongoose,
-    common = require('../common');
+    common = require('../common'),
+    rsvp = require('rsvp');
 
 //Schema
 var inspectionSchema = new mongoose.Schema({
@@ -38,9 +39,18 @@ var setPopulation = function (req, res, next) {
 
 
 var doValidation = function (req, res, next) {
-    common.validateChild(req, res, next, req.body.inspector, inspector);
-    common.validateChild(req, res, next, req.body.asset, asset);
-    common.validateChild(req, res, next, req.body.outcome, inspectionOutcome);
+    rsvp.all([
+        common.validateChild(req, res, next, req.body.inspector, inspector),
+        common.validateChild(req, res, next, req.body.asset, asset),
+        common.validateChild(req, res, next, req.body.outcome, inspectionOutcome)
+    ]).then(function (comments) {
+        next();
+    }).catch(function (error) {
+        var msg = error();
+        console.log(msg);
+        next({ status: 404, err: msg});
+    });
+
 };
 
 
