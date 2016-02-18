@@ -46,10 +46,10 @@ var setPopulation = function (req, res, next) {
 
 var doValidation = function (req, res, next) {
     rsvp.all([
-        common.validateChild(req, res, next, req.body.site, locationSite),
-        common.validateChild(req, res, next, req.body.building, locationBuilding),
-        common.validateChild(req, res, next, req.body.detail, locationDetail),
-        common.validateChild(req, res, next, req.body.asset, asset)
+        common.validateChild(req.body.site, locationSite),
+        common.validateChild(req.body.building, locationBuilding),
+        common.validateChild(req.body.detail, locationDetail),
+        common.validateChild(req.body.asset, asset)
     ]).then(function (comments) {
         next();
     }).catch(function (error) {

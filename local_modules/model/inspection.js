@@ -18,7 +18,10 @@ var inspectionSchema = new mongoose.Schema({
         ref: 'inspector',
         required: true
     },
-    dueDate: Date,
+    dueDate: {
+        type: Date,
+        default: Date.now()
+    },
     asset: {
         type: 'ObjectId',
         ref: 'asset',
@@ -26,23 +29,28 @@ var inspectionSchema = new mongoose.Schema({
     },
     outcome:  {
         type: 'ObjectId',
-        ref: 'inspectionOutcome'
+        ref: 'inspectionOutcome',
+        required : true
     }
 });
 
 
 // population / validation handlers
 var setPopulation = function (req, res, next) {
-    req.query = {populate: ['inspector', 'asset', 'outcome']};
+    req.query = {populate: [
+        'inspector',
+        'asset',
+        'outcome'
+    ]};
     next();
 };
 
 
 var doValidation = function (req, res, next) {
     rsvp.all([
-        common.validateChild(req, res, next, req.body.inspector, inspector),
-        common.validateChild(req, res, next, req.body.asset, asset),
-        common.validateChild(req, res, next, req.body.outcome, inspectionOutcome)
+        common.validateChild(req.body.inspector, inspector),
+        common.validateChild(req.body.asset, asset),
+        common.validateChild(req.body.outcome, inspectionOutcome)
     ]).then(function (comments) {
         next();
     }).catch(function (error) {

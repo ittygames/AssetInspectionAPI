@@ -19,10 +19,5 @@ var validateSingularChild = function (valuePath, model) {
     });
 };
 
-var validateArrayChild = function (arrayValues, model) {
-    arrayValues.forEach(function (entry) {
-        validateSingularChild(entry, model);
-    });
-};
 
-module.exports = {validateChild: validateSingularChild, validateArrayChild: validateArrayChild};
+module.exports = {validateChild: validateSingularChild};

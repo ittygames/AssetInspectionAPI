@@ -27,14 +27,14 @@ var setPopulation = function (req, res, next) {
 
 
 var doValidation = function (req, res, next) {
-    rsvp.all([
-        common.validateArrayChild(req, res, next, req.body.siteInspectors, inspector)
-    ]).then(function (comments) {
+    rsvp.all([req.body.siteInspectors.forEach(function (entry) {
+        return new rsvp.Promise(function (resolve, reject) {
+            common.validateChild(entry, inspector).catch(function (error) {
+               reject();
+            });
+        });
+    })]).then(function(result){
         next();
-    }).catch(function (error) {
-        var msg = error();
-        console.log(msg);
-        next({ status: 404, err: msg});
     });
 };
 

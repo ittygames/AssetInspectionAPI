@@ -11,10 +11,12 @@ var restful = require('node-restful'),
 
 //Schema
 var inspectionOutcomeSchema = new mongoose.Schema({
+    inspectionCompleted: Boolean,
     isPass: Boolean,
     replacementAsset: {
         type: 'ObjectId',
-        ref: 'asset'
+        ref: 'asset',
+        required: false
     },
     failureReason: String,
     inspectionDate: Date,
@@ -24,15 +26,13 @@ var inspectionOutcomeSchema = new mongoose.Schema({
 
 // population / validation handlers
 var setPopulation = function (req, res, next) {
-    req.query = {populate: ['site']};
+    req.query = {populate: ['replacementAsset']};
     next();
 };
 
-
 var doValidation = function (req, res, next) {
-
     rsvp.all([
-        common.validateChild(req, res, next, req.body.replacementAsset, asset)
+        common.validateChild(req.body.replacementAsset, asset)
     ]).then(function (comments) {
         next();
     }).catch(function (error) {
@@ -40,15 +40,16 @@ var doValidation = function (req, res, next) {
         console.log(msg);
         next({ status: 404, err: msg});
     });
-
 };
 
 
-
-//Return Model
-var returnModel = restful.model('inspectorOutcome', inspectionOutcomeSchema);
-returnModel.methods([ {method: 'get', before: setPopulation}, {method: 'put', before: doValidation}, {method: 'post', before: doValidation}, 'delete']);
-
+//Set Methods and Return Model
+var returnModel = restful.model('inspectionOutcome', inspectionOutcomeSchema);
+returnModel.methods([
+    {method: 'get', before: setPopulation},
+    {method: 'put', before: doValidation},
+    'post',
+    'delete']);
 
 returnModel.detail = true;
 module.exports = returnModel;
