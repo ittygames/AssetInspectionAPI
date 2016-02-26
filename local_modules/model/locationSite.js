@@ -27,14 +27,13 @@ var setPopulation = function (req, res, next) {
 
 
 var doValidation = function (req, res, next) {
-    rsvp.all([req.body.siteInspectors.forEach(function (entry) {
-        return new rsvp.Promise(function (resolve, reject) {
-            common.validateChild(entry, inspector).catch(function (error) {
-               reject();
-            });
-        });
-    })]).then(function(result){
+    rsvp.all( [common.validateUniqueChildren(req.body.siteInspectors, 'Inspectors')].concat(
+        req.body.siteInspectors.map(function(i) {return common.validateChild(i, inspector);}))
+    ).then(function() {
         next();
+    }).catch(function(error) {
+        var msg = error();
+        res.send({ status: 404, err: msg});
     });
 };
 

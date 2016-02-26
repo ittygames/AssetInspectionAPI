@@ -54,8 +54,7 @@ var doValidation = function (req, res, next) {
         next();
     }).catch(function (error) {
         var msg = error();
-        console.log(msg);
-        next({ status: 404, err: msg});
+        res.send({ status: 404, err: msg});
     });
 
 };

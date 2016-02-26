@@ -40,10 +40,13 @@ var setPopulation = function (req, res, next) {
     req.query = {populate: [
         'inspector',
         'asset',
-        'outcome'
+        'outcome',
+
     ]};
     next();
 };
+
+
 
 
 var doValidation = function (req, res, next) {
@@ -55,8 +58,7 @@ var doValidation = function (req, res, next) {
         next();
     }).catch(function (error) {
         var msg = error();
-        console.log(msg);
-        next({ status: 404, err: msg});
+        res.send({ status: 404, err: msg});
     });
 
 };
