@@ -6,7 +6,8 @@ var restful = require('node-restful'),
 //Schema
 var inspectorSchema = new mongoose.Schema({
     name: String,
-    employeeID: Number
+    employeeID: Number,
+    loginName: String
 });
 
 

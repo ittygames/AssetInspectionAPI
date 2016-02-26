@@ -10,7 +10,8 @@ var restful = require('node-restful'),
     locationBuilding = require('./locationBuilding'),
     locationSite = require('./locationSite'),
     common = require('../common'),
-    mongoose = restful.mongoose;
+    mongoose = restful.mongoose,
+    rsvp = require('rsvp');
 
 //Schema
 var locationHistorySchema = new mongoose.Schema({
@@ -44,10 +45,18 @@ var setPopulation = function (req, res, next) {
 
 
 var doValidation = function (req, res, next) {
-    common.validateChild(req, res, next, req.body.site, locationSite);
-    common.validateChild(req, res, next, req.body.building, locationBuilding);
-    common.validateChild(req, res, next, req.body.detail, locationDetail);
-    common.validateChild(req, res, next, req.body.asset, asset);
+    rsvp.all([
+        common.validateChild(req.body.site, locationSite),
+        common.validateChild(req.body.building, locationBuilding),
+        common.validateChild(req.body.detail, locationDetail),
+        common.validateChild(req.body.asset, asset)
+    ]).then(function (comments) {
+        next();
+    }).catch(function (error) {
+        var msg = error();
+        res.send({ status: 404, err: msg});
+    });
+
 };
 
 
