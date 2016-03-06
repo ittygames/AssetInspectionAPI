@@ -10,15 +10,19 @@ var Inspector = require('../model/inspector');
 var Asset = require('../model/asset');
 var Inspection = require('../model/inspection');
 var InspectionOutcome = require('../model/inspectionOutcome');
-var AssetType = require('../model/assetType');
+var Type = require('../model/type');
 var LocationBuilding = require('../model/locationBuilding');
 var LocationDetails = require('../model/locationDetails');
 var LocationHistory = require('../model/locationHistory');
 var LocationSite = require('../model/locationSite');
+var TypeTemplates = require('../model/typeTemplates');
+var Template = require('../model/template');
+var Property = require('../model/property');
+var PropertyValue = require('../model/typeTemplates');
 
 //routes
 Asset.register(router, '/asset');
-AssetType.register(router, '/assetType');
+Type.register(router, '/type');
 Inspector.register(router, '/inspector');
 Inspection.register(router, '/inspection');
 InspectionOutcome.register(router, '/inspectionOutcome');
@@ -26,6 +30,11 @@ LocationBuilding.register(router, '/locationBuilding');
 LocationDetails.register(router, '/locationDetails');
 LocationHistory.register(router, '/locationHistory');
 LocationSite.register(router, '/locationSite');
+TypeTemplates.register(router, '/typeTemplates');
+Template.register(router, '/template');
+Property.register(router, '/property');
+PropertyValue.register(router, '/propertyValue');
+
 
 //return router
 module.exports = router;

@@ -6,17 +6,16 @@
 var restful = require('node-restful'),
     mongoose = restful.mongoose;
 
+
 //Schema
-var assetTypeSchema = new mongoose.Schema({
-    name: {type: String, index: {unique: true}},
-    inspectionFrequency: Number
+var templateSchema = new mongoose.Schema({
+   name : String
 });
 
 
 //Return Model
-var returnModel = restful.model('assetType', assetTypeSchema);
+var returnModel = restful.model('template', templateSchema);
 returnModel.methods(['get', 'put', 'post', 'delete']);
 
 
-returnModel.detail = true;
 module.exports = returnModel;

@@ -16,7 +16,7 @@ var bodyParser = require('body-parser');
 mongoose.connect('mongodb://localhost/asset_inspection');
 
 //Express
-var port = 8888;
+var port = 8080;
 var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -26,5 +26,6 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 app.use('/api', require('./local_modules/routes/api'));
 
 //Start Server
-app.listen(port);
+app.set('domain', '202.0.51.105')
+app.listen(port, "0.0.0.0");
 console.log('Asset Inspection Tracking API running on port: ' + port);

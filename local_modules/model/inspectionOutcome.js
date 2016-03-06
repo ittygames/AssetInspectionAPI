@@ -20,7 +20,10 @@ var inspectionOutcomeSchema = new mongoose.Schema({
     },
     failureReason: String,
     inspectionDate: Date,
-    failureDate: Date
+    type:{
+        type: 'ObjectId',
+        ref: 'type'
+    }
 });
 
 

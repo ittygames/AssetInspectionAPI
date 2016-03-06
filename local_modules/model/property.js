@@ -4,38 +4,32 @@
 
 //Dependencies
 var restful = require('node-restful'),
-    type = require('./type'),
-    inspector = require('./inspector'),
     mongoose = restful.mongoose,
-    common = require('../common'),
-    rsvp = require('rsvp');
+    template = require('./template'),
+    common = require('../common');
 
 
 //Schema
-var assetSchema = new mongoose.Schema({
-    age: Number,
-    type: {
-        type: 'ObjectId',
-        ref: 'type'
+var propertiesSchema = new mongoose.Schema({
+    name : String,
+    type : String,
+    template : {
+        type:'ObjectId',
+        ref:'template'
     },
-    primaryInspector : {
-        type: 'ObjectId',
-        ref: 'inspector'
-    }
-
+    order: Number
 });
 
 
 // population / validation handlers
 var setPopulation = function (req, res, next) {
-    req.query = {populate: ['type','primaryInspector']};
+    req.query = {populate: ['template']};
     next();
 };
 
 var doValidation = function (req, res, next) {
     rsvp.all([
-        common.validateChild(req.body.type, type),
-        common.validateChild(req.body.primaryInspector, inspector)
+        common.validateChild(req.body.template, template)
     ]).then(function (comments) {
         next();
     }).catch(function (error) {
@@ -46,11 +40,10 @@ var doValidation = function (req, res, next) {
 };
 
 
+
 //Return Model
-var returnModel = restful.model('asset', assetSchema);
+var returnModel = restful.model('property', propertiesSchema);
 returnModel.methods([ {method: 'get', before: setPopulation}, {method: 'put', before: doValidation}, {method: 'post', before: doValidation}, 'delete']);
 
 
-returnModel.detail = true;
 module.exports = returnModel;
-
